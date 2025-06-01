@@ -1,0 +1,16 @@
+{
+  "name": "myfolio",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "dev": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.6"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.3"
+  }
+}

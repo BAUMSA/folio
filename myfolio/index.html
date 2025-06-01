@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio de Fidele bauma - Développeur Full Stack passionné par l’électronique et la technologie IoT. Fidele Muhindo est spécialisé dans la création d’applications web modernes, performantes et élégantes. Découvrez ses compétences en objets connectés, PHP, Laravel, Livewire, FilamentPHP, Expo et Tailwind CSS. Expériences numériques uniques, UX/UI, qualité du code et innovation.">
+    <meta name="author" content="Fidele bauma">
+    <meta name="theme-color" content="#0a192f">
+    <title>Folio</title>
+    <!-- Préchargement et chargement différé des ressources -->
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="dist/output.css">
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
+    <style>
+        /* ==========================================================================
+           Animations de base
+           ========================================================================== */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes rotate3D {
+            0% {
+                transform: perspective(1000px) rotateY(0deg);
+            }
+
+            100% {
+                transform: perspective(1000px) rotateY(360deg);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        /* ==========================================================================
+           Styles Glassmorphism
+           ========================================================================== */
+        .glass {
+            background: rgba(10, 25, 47, 0.6);
+            /* Ajuster l'opacité */
+            backdrop-filter: blur(10px);
+            /* Ajuster le blur */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass.scrolled {
+            background: rgba(10, 25, 47, 0.8);
+            /* Ajuster l'opacité au scroll */
+            backdrop-filter: blur(15px);
+            /* Ajuster le blur au scroll */
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px -10px rgba(0, 123, 255, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
+        }
+
+        /* ==========================================================================
+           Styles Carrousel
+           ========================================================================== */
+        .swiper-container {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ==========================================================================
+           Animation des icônes
+           ========================================================================== */
+        .tech-icon {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tech-icon:hover {
+            color: #007BFF;
+            transform: scale(1.2);
+        }
+
+        /* ==========================================================================
+           Menu mobile amélioré
+           ========================================================================== */
+        .mobile-menu {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-top: 2rem;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+            box-shadow: 5px 0 30px -10px rgba(0, 123, 255, 0.4);
+        }
+
+        .mobile-menu .nav-link {
+            position: relative;
+            padding: 1rem 1.5rem;
+            margin: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu .nav-link:hover {
+            background: rgba(0, 123, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .mobile-menu .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* ==========================================================================
+           Scroll Progress
+           ========================================================================== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+        
+            transform-origin: 0;
+            z-index: 1000;
+        }
+
+        /* ==========================================================================
+           Animations 3D Hero
+           ========================================================================== */
+        .hero-content {
+            perspective: 1000px;
+        }
+
+        .hero-title {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-card {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .hero-card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+    </style>
+    <!-- Ajout Animate.css pour les animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+
+<body class="bg-[#0a192f] text-white overflow-x-hidden">
+    <!-- Loader -->
+    <div id="loader" class="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0a192f] transition-opacity duration-500">
+        <div class="flex flex-col items-center">
+            <span class="animate-spin rounded-full border-4 border-[#007BFF] border-t-transparent w-16 h-16 mb-4"></span>
+            <span class="text-[#00ffea] font-bold text-xl">Chargement...</span>
+        </div>
+    </div>
+    <!-- Fin Loader -->
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-20 top-0 start-0 border-b border-gray-700 glass">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <!-- Nouveau logo façon Facebook : cercle bleu avec F stylisé -->
+                <span class="flex items-center justify-center w-10 h-10 rounded-full bg-[#1877f3] shadow-lg border-2 border-white/20">
+                    <span class="font-extrabold text-2xl text-white font-sans" style="font-family: 'Segoe UI', Arial, sans-serif; letter-spacing: -2px;">F</span>
+                </span>
+                <span class="self-center text-2xl font-semibold text-white tracking-tight">Folio</span>
+            </a>
+            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <!-- Bouton "Me contacter" supprimé ici -->
+                <button id="menuButton" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-400 rounded-lg md:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false" aria-label="Ouvrir le menu">
+                    <span class="sr-only">Ouvrir le menu</span>
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-700 rounded-lg bg-gray-800 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent">
+                    <li>
+                        <a href="#home" class="block py-2 px-3 text-white bg-[#007BFF] rounded-sm md:bg-transparent md:text-[#007BFF] md:p-0" aria-current="page">Accueil</a>
+                    </li>
+                    <li>
+                        <a href="#competences" class="block py-2 px-3 text-white rounded-sm hover:bg-gray-700 md:hover:bg-transparent md:hover:text-[#007BFF] md:p-0">competences</a>
+                    </li>
+                    <li>
+                        <a href="#technologies" class="block py-2 px-3 text-white rounded-sm hover:bg-gray-700 md:hover:bg-transparent md:hover:text-[#007BFF] md:p-0">Technologies</a>
+                    </li>
+                    <li>
+                        <a href="#contact" class="block py-2 px-3 text-white rounded-sm hover:bg-gray-700 md:hover:bg-transparent md:hover:text-[#007BFF] md:p-0">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu mobile -->
+    <div class="mobile-menu fixed top-16 left-0 w-full h-screen bg-[#0a192f] md:hidden">
+        <div class="flex flex-col p-4 space-y-2">
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-bold text-white mb-2">Menu</h3>
+                <div class="w-16 h-1 bg-[#007BFF] mx-auto rounded-full"></div>
+            </div>
+
+            <a href="#home" class="nav-link flex items-center space-x-4 hover:text-[#007BFF] transition-colors">
+                <i class="fas fa-home text-[#007BFF]"></i>
+                <span class="font-medium">Accueil</span>
+            </a>
+
+            <a href="#competences" class="nav-link flex items-center space-x-4 hover:text-[#007BFF] transition-colors">
+                <i class="fas fa-user text-[#007BFF]"></i>
+                <span class="font-medium">competences</span>
+            </a>
+
+            <a href="#technologies" class="nav-link flex items-center space-x-4 hover:text-[#007BFF] transition-colors">
+                <i class="fas fa-code text-[#007BFF]"></i>
+                <span class="font-medium">Technologies</span>
+            </a>
+
+            <a href="#contact" class="nav-link flex items-center space-x-4 hover:text-[#007BFF] transition-colors">
+                <i class="fas fa-envelope text-[#007BFF]"></i>
+                <span class="font-medium">Contact</span>
+            </a>
+
+            <div class="mt-8 pt-8 border-t border-white/10">
+                <div class="flex justify-center space-x-4">
+                    <a href="#" class="p-2 rounded-full bg-white/5 hover:bg-[#007BFF]/20 transition-colors" aria-label="GitHub">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="p-2 rounded-full bg-white/5 hover:bg-[#007BFF]/20 transition-colors" aria-label="LinkedIn">
+                        <i class="fab fa-zlinkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Home avec photo à gauche -->
+    <section id="home" class="min-h-screen flex flex-col items-center justify-center pt-24 bg-[#0a192f] relative overflow-hidden">
+        <div class="relative w-full flex flex-col md:flex-row items-center min-h-[400px]">
+            <!-- Photo à gauche -->
+            <div class="w-full md:w-2/5 flex justify-center md:justify-start z-10 mt-10 md:mt-0 px-6 md:px-0 order-2 md:order-1">
+                <div class="relative group flex items-center justify-center">
+                    <!-- Effet de halo/glow autour de la photo -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-[#007BFF] to-[#00ff88] rounded-full blur-lg opacity-50 group-hover:opacity-80 transition duration-700"></div>
+                    <!-- Cercle blanc translucide pour effet glass -->
+                    <div class="absolute inset-0 rounded-full bg-white/10 backdrop-blur-md"></div>
+                    <!-- Photo PNG sans fond, plus grande et bien centrée -->
+                    <img src="IMG_5443.jpg"
+                         alt="Photo de profil"
+                         class="relative z-10 w-72 h-72 md:w-[420px] md:h-[420px] object-contain rounded-full shadow-2xl border-4 border-[#007BFF] bg-white/10 transition-transform duration-500 group-hover:scale-105" />
+                </div>
+            </div>
+            <!-- Texte à droite -->
+            <div class="w-full md:w-3/5 z-10 flex flex-col justify-center items-start px-6 md:px-16 py-8 order-1 md:order-2">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-white">Hello, je suis</span>
+                    <span class="text-[#007BFF] block">Fidele</span>
+                </h2>
+                <p class="text-lg md:text-xl text-gray-300 mb-6 max-w-xl">
+                    Développeur Full Stack passionné, spécialisé dans la création d’applications web modernes, performantes et élégantes.<br>
+                    J’aime transformer les idées en expériences numériques uniques, avec un soin particulier pour l’UX/UI et la qualité du code.<br>
+                    <span class="block mt-2 text-[#00ff88] font-semibold">Passionné par l’électronique et la technologie IoT, j’intègre des objets connectés dans mes projets.</span>
+                </p>
+                <div class="flex flex-wrap gap-3 mb-8">
+                    <span class="px-4 py-2 bg-[#007BFF]/20 rounded-full text-sm font-semibold text-[#007BFF]">PHP</span>
+                    <span class="px-4 py-2 bg-[#007BFF]/20 rounded-full text-sm font-semibold text-[#007BFF]">Laravel</span>
+                    <span class="px-4 py-2 bg-[#007BFF]/20 rounded-full text-sm font-semibold text-[#007BFF]">Objets connectés</span>
+                    <span class="px-4 py-2 bg-[#007BFF]/20 rounded-full text-sm font-semibold text-[#007BFF]">Smart City</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Compétences (remplace About, doit être avant Technologies) -->
+    <section id="competences" class="w-full py-16 px-0 bg-transparent relative">
+        <div class="z-10 w-full flex flex-col items-center px-4">
+            <h2 class="text-4xl font-bold text-center mb-4 animate__animated animate__fadeInDown">Compétences</h2>
+            <p class="text-gray-400 text-center mb-10 max-w-2xl animate__animated animate__fadeInUp">
+                Voici un aperçu dynamique de mes compétences principales en développement web, PHP, frameworks modernes et objets connectés (IoT).
+            </p>
+            <div id="competences-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full max-w-4xl mb-8">
+                <!-- Les compétences seront injectées ici dynamiquement -->
+            </div>
+        </div>
+        <script>
+            // Dynamisation de la section compétences avec animation et objets IoT
+            document.addEventListener('DOMContentLoaded', function () {
+                const competences = [
+                    {
+                        icon: 'fas fa-microchip',
+                        color: '#00ffea',
+                        title: 'Objets connectés',
+                        desc: 'Conception de systèmes IoT, capteurs, microcontrôleurs, Arduino, ESP32, Raspberry Pi, intégration hardware/software.'
+                    },
+                    {
+                        icon: 'fas fa-network-wired',
+                        color: '#38bdf8',
+                        title: 'Protocoles IoT',
+                        desc: 'MQTT, HTTP, WebSocket, LoRa, Zigbee, communication temps réel et sécurisée.'
+                    },
+                    {
+                        icon: 'fas fa-cloud',
+                        color: '#00ff88',
+                        title: 'Cloud & IoT',
+                        desc: 'Intégration cloud pour objets connectés, bases de données temps réel, dashboards et monitoring.'
+                    },
+                    {
+                        icon: 'fas fa-broadcast-tower',
+                        color: '#a259ff',
+                        title: 'Smart City',
+                        desc: 'Solutions connectées pour villes intelligentes, automatisation, gestion de données urbaines.'
+                    },
+                    {
+                        icon: 'fab fa-php',
+                        color: '#8993be',
+                        title: 'PHP',
+                        desc: 'Développement back-end, API, sites dynamiques et applications robustes.'
+                    },
+                    {
+                        icon: 'fab fa-laravel',
+                        color: '#ff2d20',
+                        title: 'Laravel',
+                        desc: 'Framework PHP moderne, MVC, sécurité, artisan, Eloquent ORM.'
+                    },
+                    {
+                        icon: 'fas fa-bolt',
+                        color: '#4f46e5',
+                        title: 'Livewire',
+                        desc: 'Composants dynamiques Laravel, interactions réactives sans JavaScript.'
+                    },
+                    {
+                        icon: 'fas fa-leaf',
+                        color: '#16a34a',
+                        title: 'FilamentPHP',
+                        desc: 'Admin panels élégants et puissants pour Laravel, gestion de ressources.'
+                    },
+                    {
+                        icon: 'fab fa-js-square',
+                        color: '#000020',
+                        title: 'Expo',
+                        desc: 'Développement d’applications mobiles React Native, workflow rapide.'
+                    },
+                    {
+                        icon: 'fas fa-wind',
+                        color: '#38bdf8',
+                        title: 'Tailwind CSS',
+                        desc: 'Framework CSS utilitaire pour des interfaces modernes et responsives.'
+                    }
+                ];
+
+                const container = document.getElementById('competences-list');
+                container.innerHTML = competences.map((skill, i) => `
+                    <div class="glass-card flex flex-col items-center p-6 transition-transform hover:-translate-y-2 group animate__animated animate__zoomIn" style="animation-delay:${i * 0.08}s">
+                        <i class="${skill.icon} text-5xl mb-4" style="color:${skill.color}; filter: drop-shadow(0 4px 16px ${skill.color}55); transition: transform 0.4s;" ></i>
+                        <h3 class="text-xl font-bold mb-2 text-center group-hover:text-[#007BFF] transition-colors">${skill.title}</h3>
+                        <p class="text-gray-300 text-center text-sm">${skill.desc}</p>
+                    </div>
+                `).join('');
+            });
+        </script>
+    </section>
+
+    <!-- Section Technologies avec GIF développeur en premier dans le carrousel -->
+    <section id="technologies" class="py-20 bg-gradient-to-br from-[#0a192f] via-[#0e223a] to-[#1a2a4f] relative overflow-hidden">
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-[#007BFF]/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-[#00ff88]/20 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+        <div class="flex flex-col items-center justify-center max-w-6xl mx-auto relative z-10">
+            <h2 class="text-4xl font-extrabold text-center mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#007BFF] via-[#00ffea] to-[#00ff88] drop-shadow-lg">Technologies</h2>
+            <p class="text-gray-300 text-center mb-8 text-lg font-medium">
+                Voici un aperçu des technologies que j'utilise pour créer des applications web modernes et performantes.
+            </p>
+            <div class="swiper-container" style="max-width:100%; margin:auto; height:420px;">
+                <div class="swiper-wrapper">
+                    <!-- Slide GIF développeur en premier -->
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#007BFF]/20 flex items-center justify-center p-0 overflow-hidden">
+                        <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif"
+                             alt="Développeur en action"
+                             class="object-cover w-full h-full min-h-[320px] min-w-[320px] md:min-h-[420px] md:min-w-[420px] rounded-2xl shadow-lg border-4 border-[#007BFF] bg-white/10" />
+                    </div>
+                    <!-- Slides technologies personnalisées -->
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#8993be]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fab fa-php text-8xl md:text-[180px] mb-6 text-[#8993be] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#8993be]">PHP</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#ff2d20]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fab fa-laravel text-8xl md:text-[180px] mb-6 text-[#ff2d20] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#ff2d20]">Laravel</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#4f46e5]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fas fa-bolt text-8xl md:text-[180px] mb-6 text-[#4f46e5] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#4f46e5]">Livewire</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#16a34a]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fas fa-leaf text-8xl md:text-[180px] mb-6 text-[#16a34a] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#16a34a]">FilamentPHP</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#000020]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fab fa-js-square text-8xl md:text-[180px] mb-6 text-[#000020] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#000020]">Expo</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide glass-card hover:scale-105 transition-transform duration-300 shadow-lg border border-[#38bdf8]/20">
+                        <div class="tech-icon text-center p-10">
+                            <i class="fas fa-wind text-8xl md:text-[180px] mb-6 text-[#38bdf8] drop-shadow-lg"></i>
+                            <h3 class="text-2xl font-semibold text-[#38bdf8]">Tailwind CSS</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+        <!-- ...section Mes projets... -->
+    <section id="projects" class="w-full py-20 bg-gradient-to-br from-[#0a192f] via-[#0e223a] to-[#1a2a4f] relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-[#007BFF] via-[#00ffea] to-[#00ff88] drop-shadow-lg animate__animated animate__fadeInDown">
+                Mes projets
+            </h2>
+            <p class="text-gray-300 text-center mb-8 max-w-2xl mx-auto text-lg animate__animated animate__fadeInUp">
+                Découvrez quelques-unes de mes réalisations récentes, mêlant développement web, IoT, interfaces modernes et technologies innovantes. Cliquez sur une image pour en savoir plus !
+            </p>
+            <div id="projects-pagination" class="flex justify-center mb-8 space-x-2"></div>
+            <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <!-- Les cartes projets seront injectées ici -->
+            </div>
+        </div>
+        <script>
+            // Liste des projets
+            const projects = [
+                {
+                    img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80",
+                    title: "Projet IoT Dashboard",
+                    desc: "Dashboard interactif pour objets connectés, visualisation temps réel, notifications et gestion des capteurs.",
+                    link: "#"
+                },
+                {
+                    img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+                    title: "Application Laravel/Livewire",
+                    desc: "Application web moderne avec Laravel, Livewire et FilamentPHP pour la gestion de ressources et d’utilisateurs.",
+                    link: "#"
+                },
+                {
+                    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+                    title: "Expo Mobile App",
+                    desc: "Application mobile développée avec Expo et Tailwind CSS, notifications push et synchronisation cloud.",
+                    link: "#"
+                },
+                {
+                    img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+                    title: "FilamentPHP Admin",
+                    desc: "Panneau d'administration élégant et puissant pour la gestion de données avec FilamentPHP.",
+                    link: "#"
+                },
+                {
+                    img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+                    title: "Smart City Platform",
+                    desc: "Plateforme de gestion urbaine intelligente, collecte et analyse de données IoT pour la ville.",
+                    link: "#"
+                },
+                {
+                    img: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80",
+                    title: "PHP API REST",
+                    desc: "API REST performante en PHP pour applications mobiles et web, sécurisée et documentée.",
+                    link: "#"
+                }
+            ];
+    
+            // Pagination
+            const projectsPerPage = 3;
+            let currentPage = 1;
+    
+            function renderProjects(page = 1) {
+                const grid = document.getElementById('projects-grid');
+                grid.innerHTML = '';
+                const start = (page - 1) * projectsPerPage;
+                const end = start + projectsPerPage;
+                projects.slice(start, end).forEach((project, idx) => {
+                    grid.innerHTML += `
+                    <div class="project-card glass-card p-6 rounded-2xl shadow-lg flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-2 animate__animated animate__fadeInUp" data-idx="${start + idx}" style="animation-delay:${idx * 0.15}s">
+                        <div class="relative w-full h-48 mb-4 overflow-hidden rounded-xl group">
+                            <img src="${project.img}"
+                                alt="${project.title}"
+                                class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110 project-img"
+                                onclick="showProjectButton(this)" />
+                            <button class="project-btn absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700 transform scale-75"
+                                onclick="event.stopPropagation(); window.open('${project.link}', '_blank');">
+                                <span class="px-4 py-2 bg-gradient-to-r from-[#007BFF] to-[#00ff88] text-white rounded-lg font-semibold shadow-lg hover:bg-blue-600 transition-all duration-300 text-lg animate__animated">Voir plus</span>
+                            </button>
+                            <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-xl"></div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-center text-[#007BFF] animate__animated animate__fadeInDown" style="animation-delay:${0.2 + idx * 0.15}s">${project.title}</h3>
+                        <p class="text-gray-300 text-center text-sm mb-4 animate__animated animate__fadeInUp" style="animation-delay:${0.3 + idx * 0.15}s">${project.desc}</p>
+                    </div>
+                    `;
+                });
+            }
+    
+            function renderPagination() {
+                const nbPages = Math.ceil(projects.length / projectsPerPage);
+                const pag = document.getElementById('projects-pagination');
+                pag.innerHTML = '';
+                for (let i = 1; i <= nbPages; i++) {
+                    pag.innerHTML += `<button class="px-3 py-1 rounded-full font-semibold ${i === currentPage ? 'bg-gradient-to-r from-[#007BFF] to-[#00ff88] text-white shadow-lg scale-110' : 'bg-white/10 text-[#007BFF]'} transition transform hover:scale-110" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+    
+            function goToPage(page) {
+                currentPage = page;
+                renderProjects(page);
+                renderPagination();
+            }
+    
+            // Animation bouton "Voir plus" au clic sur l'image
+            function showProjectButton(img) {
+                // Lance l'animation sur toutes les autres cards visibles
+                document.querySelectorAll('.project-card').forEach(card => {
+                    const btn = card.querySelector('.project-btn');
+                    btn.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
+                    btn.classList.add('opacity-0', 'pointer-events-none', 'scale-75');
+                    card.classList.remove('animate__tada', 'animate__pulse', 'z-20');
+                    if (img && card.contains(img)) {
+                        // Animation sur la card cliquée
+                        card.classList.add('animate__tada', 'z-20');
+                        setTimeout(() => card.classList.remove('animate__tada', 'z-20'), 900);
+                        btn.classList.remove('opacity-0', 'pointer-events-none', 'scale-75');
+                        btn.classList.add('opacity-100', 'pointer-events-auto', 'animate__flipInY');
+                        setTimeout(() => btn.classList.remove('animate__flipInY'), 1000);
+                    } else {
+                        // Animation subtile sur les autres cards
+                        card.classList.add('animate__pulse');
+                        setTimeout(() => card.classList.remove('animate__pulse'), 700);
+                    }
+                });
+                // Masquer le bouton si on clique ailleurs
+                document.addEventListener('click', function hideBtn(e) {
+                    document.querySelectorAll('.project-card').forEach(card => {
+                        const btn = card.querySelector('.project-btn');
+                        if (!btn.contains(e.target) && e.target !== img) {
+                            btn.classList.remove('opacity-100');
+                            btn.classList.add('opacity-0', 'pointer-events-none', 'scale-75');
+                        }
+                    });
+                    document.removeEventListener('click', hideBtn);
+                });
+            }
+    
+            // Initialisation
+            renderProjects(currentPage);
+            renderPagination();
+    
+            // Pour accès global à showProjectButton/goToPage
+            window.showProjectButton = showProjectButton;
+            window.goToPage = goToPage;
+        </script>
+    </section>
+
+    <!-- Section Contact améliorée avec largeur 90% -->
+    <section id="contact" class="w-full py-16 px-0 bg-[#0a192f]">
+        <div class="w-[90%] max-w-3xl mx-auto glass-card p-10 md:p-16 rounded-2xl border border-white/10 shadow-lg">
+            <h2 class="text-4xl font-bold text-center mb-6">
+                <span class="text-white">Contactez-</span>
+                <span class="text-[#007BFF]">moi</span>
+            </h2>
+            <p class="text-gray-300 text-center mb-10 text-lg">
+                Vous souhaitez collaborer, discuter d’un projet ou simplement échanger sur le développement web ?<br>
+                N’hésitez pas à me contacter via le formulaire ci-dessous ou sur mes réseaux sociaux. Je réponds rapidement à toute demande sérieuse et suis toujours ouvert à de nouvelles opportunités !
+            </p>
+            <form class="space-y-6">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <input type="text" placeholder="Votre nom" class="w-full px-5 py-3 rounded-lg bg-white/10 border border-[#007BFF]/30 text-white focus:outline-none focus:ring-2 focus:ring-[#007BFF] transition" required>
+                    <input type="email" placeholder="Votre email" class="w-full px-5 py-3 rounded-lg bg-white/10 border border-[#007BFF]/30 text-white focus:outline-none focus:ring-2 focus:ring-[#007BFF] transition" required>
+                </div>
+                <textarea placeholder="Votre message" rows="5" class="w-full px-5 py-3 rounded-lg bg-white/10 border border-[#007BFF]/30 text-white focus:outline-none focus:ring-2 focus:ring-[#007BFF] transition" required></textarea>
+                <button type="submit" class="w-full bg-[#007BFF] text-white font-semibold py-3 rounded-lg hover:bg-blue-600 transition-all duration-300">
+                    Envoyer le message
+                </button>
+            </form>
+            <div class="flex justify-center space-x-6 mt-10">
+                <a href="https://github.com/BAUMSA" target="_blank" class="p-3 rounded-full bg-white/10 hover:bg-[#007BFF]/30 transition-colors shadow" aria-label="GitHub">
+                    <i class="fab fa-github text-2xl text-white"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/fidele-muhindo-95b193283?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="p-3 rounded-full bg-white/10 hover:bg-[#007BFF]/30 transition-colors shadow" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin text-2xl text-[#007BFF]"></i>
+                </a>
+                <a href="https://wa.me/243808907985" target="_blank" class="p-3 rounded-full bg-white/10 hover:bg-[#007BFF]/30 transition-colors shadow" aria-label="WhatsApp">
+                    <i class="fab fa-whatsapp text-2xl text-[#25D366]"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full bg-[#0a192f] dark:bg-white border-t border-white/10 dark:border-gray-200 py-8 mt-8">
+        <div class="max-w-screen-xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-center md:text-left text-gray-400 dark:text-gray-700 text-sm">
+                © 2025 Fidele. Tous droits réservés.
+            </div>
+            
+        </div>
+    </footer>
+
+    <script>
+        // Debounce pour le scroll
+        function debounce(fn, wait) {
+            let t;
+            return (...args) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn.apply(this, args), wait);
+            };
+        }
+
+        // Navbar & scroll progress optimisé
+        const scrollProgress = document.getElementById('scrollProgress');
+        const navbar = document.querySelector('nav');
+        window.addEventListener('scroll', debounce(() => {
+            const currentScroll = window.scrollY;
+            const scrollPercent = (currentScroll / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            scrollProgress.style.transform = `scaleX(${scrollPercent / 100})`;
+            if (currentScroll > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }, 16), { passive: true });
+
+        // Swiper optimisé
+        window.addEventListener('DOMContentLoaded', () => {
+            new Swiper('.swiper-container', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                },
+                pagination: { el: '.swiper-pagination' },
+                updateOnWindowResize: true,
+                preloadImages: false,
+                lazy: true,
+            });
+
+            // Animation des icônes tech
+            anime({
+                targets: '.tech-icon i',
+                scale: [1, 1.1],
+                duration: 2000,
+                loop: true,
+                direction: 'alternate',
+                easing: 'easeInOutQuad'
+            });
+
+            // Menu mobile optimisé
+            const menuButton = document.getElementById('menuButton');
+            const navbarSticky = document.getElementById('navbar-sticky');
+            const navLinks = document.querySelectorAll('.mobile-menu .nav-link');
+            menuButton.addEventListener('click', () => {
+                navbarSticky.classList.toggle('hidden');
+                const icon = menuButton.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+                navLinks.forEach((link, index) => {
+                    link.style.animation = navbarSticky.classList.contains('hidden') ? '' : `fadeInRight 0.5s ease forwards ${index * 0.1}s`;
+                });
+            });
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navbarSticky.classList.add('hidden');
+                    const icon = menuButton.querySelector('i');
+                    icon.classList.add('fa-bars');
+                    icon.classList.remove('fa-times');
+                });
+            });
+
+            // Gestion du lien actif selon la section visible
+            // Sélecteurs pour tous les liens de navigation (desktop + mobile)
+            const allNavLinks = document.querySelectorAll('a[href^="#"]:not([href="#"])');
+            const sections = Array.from(document.querySelectorAll('section[id]'));
+
+            function activateNavLink() {
+                let scrollPos = window.scrollY + 100; // Décalage pour la navbar
+                let currentSection = sections[0];
+
+                for (const section of sections) {
+                    if (section.offsetTop <= scrollPos) {
+                        currentSection = section;
+                    }
+                }
+
+                allNavLinks.forEach(link => {
+                    link.classList.remove('bg-[#007BFF]', 'md:text-[#007BFF]', 'text-[#007BFF]', 'md:bg-transparent');
+                    if (link.getAttribute('href') === `#${currentSection.id}`) {
+                        // Style actif pour mobile et desktop
+                        link.classList.add('bg-[#007BFF]', 'md:text-[#007BFF]', 'text-white', 'md:bg-transparent');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', activateNavLink, { passive: true });
+            activateNavLink();
+        });
+
+        // Loader : masquer après chargement complet
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        });
+    </script>
+</body>
+</html>
